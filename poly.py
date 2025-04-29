@@ -16,6 +16,14 @@ Author: Yudi
 
 import sympy as sp 
 
+import re
+
+_EXP_RE = re.compile(r"\*\*([0-9]+)")
+
+def to_caret(expr):
+    """Convert a SymPy expression to a string with caret notation."""
+    return _EXP_RE.sub(r"^\1", str(expr))
+
 # ---------------------------------------------------------------------
 # Configuration
 # ---------------------------------------------------------------------
@@ -24,7 +32,7 @@ import sympy as sp
 x, y = sp.symbols("x y")
 
 # Sample point set E ⊂ ℝ²
-points = [(0, 0), (0, 2), (1, 0), (2, 1)]
+points = [(0, 0), (0, 2), (1, 0), (2, 1), (2, 2)]
 
 
 # ---------------------------------------------------------------------
@@ -75,15 +83,18 @@ def main():
     print("Vanishing polynomials degree‑by‑degree:\n")
     for d, polys in nullspace_polynomials(points, max_degree=len(points)):
         if polys:
-            print(f"Degree ≤ {d}   nullspace dim = {len(polys)}")
+            # list monomials up to this degree with caret notation
+            monos = monomials_up_to_degree(d)
+            monos_str = ",".join(to_caret(m) for m in monos)
+            print(f"Degree ≤ {d}   monomials = {{{monos_str}}}   nullspace dim = {len(polys)}")
             for p in polys:
-                print("   ", p)
+                print("   ", to_caret(p))
             print()
 
     print("-" * 60)
     print("Reduced basis of the vanishing ideal:")
     for g in groebner_basis_from_points(points):
-        print("   ", g)
+        print("   ",to_caret(g))
 
 
 if __name__ == "__main__":
