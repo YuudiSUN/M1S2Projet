@@ -1,13 +1,13 @@
-"""Compute the vanishing ideal of a finite set of planar points.
+"""Compute the vanishing ideal of a finite set of points in ℝ³.  # MODIFIED
 
 This module implements an algorithm to find all polynomials that vanish
-on a given set of points in ℝ². The procedure is:
+on a given set of points in ℝ³. The procedure is:  # MODIFIED
 
-1. Define symbols x, y.
-2. Generate all monomials x^i * y^j with total degree ≤ max_degree.
+1. Define symbols x, y, z.  # MODIFIED
+2. Generate all monomials x^i * y^j * z^k with total degree ≤ max_degree.  # MODIFIED
 3. Filter out monomials divisible by any recorded leading term to obtain
    standard monomials at each degree.
-4. Build the evaluation matrix of these monomials at the sample points.
+4. Build the evaluation matrix of these monomials at the sample points in 3D.  # MODIFIED
 5. Compute its null‑space to extract vanishing polynomials.
 6. Record new leading terms and iterate by increasing degree.
 7. Collect and print a reduced generating set of the vanishing ideal.
@@ -35,10 +35,10 @@ def to_caret(expr):
 # ---------------------------------------------------------------------
 
 # Symbols
-x, y = sp.symbols("x y")
+x, y, z = sp.symbols("x y z")  # MODIFIED: added z for 3D
 
-# Sample point set E ⊂ ℝ²
-points = [(0, 0), (1, 0),(2,0),(0,1)]
+# Sample point set E ⊂ ℝ³  # MODIFIED: now in 3D
+points = [(0, 0, 2), (1, 0, 0),(2,0,0),(0,1,0)]
 
 
 # ---------------------------------------------------------------------
@@ -46,14 +46,15 @@ points = [(0, 0), (1, 0),(2,0),(0,1)]
 # ---------------------------------------------------------------------
 def monomials_up_to_degree(deg: int):
     """
-    Return the list of monomials x**i * y**j with i + j ≤ deg
+    Return the list of monomials x**i * y**j * z**k with i + j + k ≤ deg
     ordered graded‑lex (total degree first, then x‑exponent descending).
     """
     monos = []
     for total in range(deg + 1):
         for i in range(total + 1):
-            j = total - i
-            monos.append(x ** i * y ** j)
+            for j in range(total + 1 - i):
+                k = total - i - j
+                monos.append(x**i * y**j * z**k)  # MODIFIED: extended to 3D monomials
     return monos
 
 def divides(m1, m2):
@@ -78,14 +79,17 @@ def nullspace_polynomials(pts, max_degree=4):
             if not any(hasattr(lt, "as_powers_dict") and divides(lt, m) for lt in lead_terms)
         ]
         # build evaluation matrix
-        M = sp.Matrix([[m.subs({x: xi, y: yi}) for m in monos_filt] for xi, yi in pts])
+        M = sp.Matrix([
+            [m.subs({x: xi, y: yi, z: zi}) for m in monos_filt]  # MODIFIED: unpack 3D points
+            for xi, yi, zi in pts
+        ])
         ker = M.nullspace()
         polys = [sp.factor(sum(c * m for c, m in zip(vec, monos_filt))) for vec in ker]
         # record leading terms for filtering next degrees
         for p in polys:
-            poly_obj = sp.Poly(p, x, y)
+            poly_obj = sp.Poly(p, x, y, z)  # MODIFIED: include z in polynomial object
             exp_tuple = poly_obj.monoms()[0]
-            lt = x**exp_tuple[0] * y**exp_tuple[1]
+            lt = x**exp_tuple[0] * y**exp_tuple[1] * z**exp_tuple[2]
             lead_terms.append(lt)
         yield d, monos_filt, polys
 
