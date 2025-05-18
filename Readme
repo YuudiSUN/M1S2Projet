@@ -11,6 +11,7 @@ M1S2Projet/
 ├── poly.py           # Compute vanishing ideal in ℝ² and print basis
 ├── 2D.py             # Compute & visualize zero-contours on points in ℝ²
 ├── 3poly.py          # Compute vanishing ideal in ℝ³ (extended version)
+├── pcca-6-slide.pdf        # Slide for presentation
 └── README.md         # Project overview (this file)
 ```
 
