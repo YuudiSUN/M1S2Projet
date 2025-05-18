@@ -6,18 +6,19 @@ This project computes the **vanishing ideal** of a finite set of points in ℝ²
 
 ## Repository Structure
 
+```
 M1S2Projet/
 ├── poly.py           # Compute vanishing ideal in ℝ² and print basis
-├── 2D.py             # Compute & visualize zero‐contours on points in ℝ²
+├── 2D.py             # Compute & visualize zero-contours on points in ℝ²
 ├── 3poly.py          # Compute vanishing ideal in ℝ³ (extended version)
-├── images_sample.zip # Example outputs & screenshots
 └── README.md         # Project overview (this file)
+```
 
 ---
 
 ## 🔧 Requirements & Installation
 
-- Python ≥ 3.7  
+- **Python** ≥ 3.7  
 - [SymPy](https://www.sympy.org)  
 - [NumPy](https://numpy.org)  
 - [Matplotlib](https://matplotlib.org)  
@@ -26,71 +27,90 @@ M1S2Projet/
 git clone https://github.com/YuudiSUN/M1S2Projet.git
 cd M1S2Projet
 pip install sympy numpy matplotlib
+```
 
+---
 
-⸻
+## 🚀 Quick Start
 
-🚀 Quick Start
+### 1. Compute Vanishing Ideal in 2D (`poly.py`)
 
-1. Compute Vanishing Ideal in 2D (poly.py)
-	1.	Edit the top of poly.py to set:
-	•	points: list of (x, y) tuples
-	•	max_degree: maximum total degree of polynomials
-	2.	Run:
+1. **Configure**  
+   At the top of `poly.py`, set:  
+   - `points`: list of `(x, y)` tuples  
+   - `max_degree`: maximum total degree of polynomials  
 
-python poly.py(Or python3 poly.py)
+2. **Run**  
+   ```bash
+   python poly.py
+   # or python3 poly.py
+   ```
 
+3. **Sample Output**  
+   ```
+   Points E: [(0, 0), (1, 0), (2, 0), (0, 1)]
+   Vanishing polynomials by degree:
+     Degree ≤ 1 → nullspace dim = 1:
+       x^2 - 2*x
+     Degree ≤ 2 → nullspace dim = 2:
+       x^2 - 2*x
+       y^2 - y
+   Reduced basis of the vanishing ideal:
+     x^2 - 2*x
+     y^2 - y
+   ```
 
-	3.	Sample output:
+---
 
-Points E: [(0, 0), (1, 0), (2, 0), (0, 1)]
-Vanishing polynomials by degree:
-  Degree ≤ 1 → nullspace dim = 1:
-    x^2 - 2*x
-  Degree ≤ 2 → nullspace dim = 2:
-    x^2 - 2*x
-    y^2 - y
-Reduced basis of the vanishing ideal:
-  x^2 - 2*x
-  y^2 - y
+### 2. Visualize Zero-Contours in 2D (`2D.py`)
 
+1. **Configure**  
+   Edit the `points` and `max_degree` variables at the top of `2D.py`.  
 
+2. **Run**  
+   ```bash
+   python 2D.py
+   ```
 
-2. Visualize Zero‐Contours in 2D (2D.py)
-	1.	Configure points and max_degree at the top.
-	2.	Run:
+3. **Result**  
+   A window will pop up showing:  
+   - A scatter plot of your points  
+   - Zero-contours (level sets) of each basis polynomial  
 
-python 2D.py
+---
 
+### 3. Compute Vanishing Ideal in 3D (`3poly.py`)
 
-	3.	A window will pop up showing:
-	•	Scatter plot of your points
-	•	Zero‐contours (level sets) of each basis polynomial
+1. **Configure**  
+   - Change `points` to a list of `(x, y, z)` tuples  
+   - Set `max_degree`  
 
-3. Compute Vanishing Ideal in 3D (3poly.py)
-	1.	Change points to a list of (x, y, z) tuples.
-	2.	Set max_degree.
-	3.	Run:
+2. **Run**  
+   ```bash
+   python 3poly.py
+   ```
 
-python 3poly.py
+3. **Result**  
+   Output is analogous to `poly.py` but for 3D point sets.
 
+---
 
-	4.	Output is analogous to poly.py but for 3D point sets.
+## ✨ Algorithm Outline
 
-⸻
+1. **Symbol Definition**  
+   Define symbolic variables (`x, y` or `x, y, z`) via SymPy.  
 
-✨ Algorithm Outline
-	1.	Symbol Definition
-Define symbolic variables (x, y or x, y, z) via SymPy.
-	2.	Monomial Enumeration
-Generate all monomials of total degree ≤ max_degree.
-	3.	Leading‐Term Filtering
-At each iteration, remove monomials divisible by previously recorded leading terms.
-	4.	Evaluation Matrix
-Build a matrix of monomial values evaluated at each point.
-	5.	Nullspace Computation
-Compute the nullspace ⇒ basis of all vanishing polynomials.
-	6.	Record Leading Terms
-Extract each basis polynomial’s leading term for the next filter step.
-⸻
+2. **Monomial Enumeration**  
+   Generate all monomials of total degree ≤ `max_degree`.  
 
+3. **Leading-Term Filtering**  
+   Remove monomials divisible by previously recorded leading terms at each iteration.  
+
+4. **Evaluation Matrix**  
+   Build a matrix of monomial values evaluated at each point.  
+
+5. **Nullspace Computation**  
+   Compute the nullspace → basis of all vanishing polynomials.  
+
+6. **Record Leading Terms**  
+   Extract each basis polynomial’s leading term for the next filter step.  
