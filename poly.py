@@ -17,7 +17,8 @@ Usage:
     to view generators degree‑by‑degree. Optionally, compute a Gröbner basis
     with `sp.groebner(...)` on the collected generators.
 
-Author: Yudi
+Author: Yudi Sun && Long Qian
+Encadrant: Jérémy Berthomieu
 """
 
 import sympy as sp 
